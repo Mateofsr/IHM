@@ -1,50 +1,44 @@
 /*
- * Tampon.java                                             18/05/2022
- * INF01 S2 pas de copy right ni de droit d'auteur
+ * FichierTexte.java 	      30 mai 2022
+ * IUT de Rodez,Info1 2021-2022 pas de copyright
  */
-package sae4.traitementtext;
+package application;
 
-import sae4.traitementtext.*;
-import java.util.ArrayList;
-import java.lang.StringBuilder;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 
-/**
- * Espace où le texte sera affiché, l'utilisateur ne pourra pas directement
- * modifier le texte qu'il y aura affiché mais pourra interagir avec par
- * l'espace de commande dédier au-dessus.
- * @author mateo.faussurier emmanuel.gomes-soares
+/** TODO commenter la responsabilitÃ© de cette classe
+ * @author 33766
  *
  */
 public class EspaceTampon {
-	
-	public String[] texte;
-	
-	private final int CARACTERES_MAX = 75;
-	
-	private final int LIGNES_MAX = 100;
-	
-	private int nbLignes;
-	
-	private int nbCaracteres;
-	
-	public int numeroLigne;
-	
-	/**
-	 * pas de paramètre
-	 * @return true si le nombre de ligne dans le tampon respecte la limite
-	 * 		   false sinon.
-	 */
-	public boolean nbLignesOk() {
-		//TODO calculer le nombre de ligne
-		return nbLignes <= LIGNES_MAX;
-	}
-	
-	/**
-	 * 
-	 * @return true si le nombre de caractères de la ligne respecte
-	 * 		   CARACTERES_MAX, false sinon
-	 */
-	public boolean nbCaracteresOk() {
-		return texte[numeroLigne].length() <= CARACTERES_MAX;
-	}
+
+    private void creationFichier(String nomFichier) throws IOException {
+        int numero = 0;
+        File fichier = new File(nomFichier+".txt");
+        while(fichier.exists()) {
+            numero++;
+            fichier = new File(nomFichier+numero+"txt");
+            fichier.renameTo(fichier);
+        } 
+    }
+
+    /** TODO commenter le rÃ´le de cette mÃ©thode (SRP)
+     * @param nomFichier
+     * @throws FileNotFoundException 
+     */
+    public void ouvrirFichier(String nomFichier) throws FileNotFoundException {
+        File fichier = new File(nomFichier+"txt");
+        if(fichier.exists()) {
+            FileReader lire = new FileReader(nomFichier+".txt");
+            BufferedReader lireFichier = new BufferedReader(lire);
+        }else {
+            throw new FileNotFoundException("fichier introuvable");
+        }
+    }
 }
+
