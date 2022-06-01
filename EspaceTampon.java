@@ -165,12 +165,8 @@ public class EspaceTampon {
     		ecritFinal += aEcrire.charAt(caractere);
     	}
     	ecrire.write(ecritFinal);
+	    //TODO a finir il ya des soucis ici
     }
-    public static void main(String[] args) throws IOException {
-    	creationFichier(nomFichier);
-    	aEcrire ="fm,lgkjklfs,mu jigdf hogisf mhfo hfdljkh gnfh fb nlm h mjhqsdhny gcynfhsdk hbgjnjhfg ,sdg,l idf,kl j,n df kjgsn k: ryjndfh  bsrjhjetb u rlz rzklhrbjhbekjhhgdhg";
-    	ecrireLigneAvant(0);
-    	ouvrirFichier();
-    }
+
 }
 
