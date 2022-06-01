@@ -1,5 +1,5 @@
 /*
- * FichierTexte.java 	      30 mai 2022
+ * FichierTexte.java          30 mai 2022
  * IUT de Rodez,Info1 2021-2022 pas de copyright
  */
 package application;
@@ -18,13 +18,13 @@ import java.util.Scanner;
  */
 public class EspaceTampon {
 
-	/**création d'un nom de fichier par défaut*/
-	public static String nomFichier="nomParDéfaut";
-	/**création d'un fichier par défaut*/
-	public static File fichier = new File(nomFichier+".txt");
-	/***/
-	public static String aEcrire;
-	 /** 
+    /**création d'un nom de fichier par défaut*/
+    public static String nomFichier="nomParDéfaut";
+    /**création d'un fichier par défaut*/
+    public static File fichier = new File(nomFichier+".txt");
+    /***/
+    public static String aEcrire;
+     /** 
      * permet de supprimer le fichier texte courant
      * 
      */
@@ -32,7 +32,7 @@ public class EspaceTampon {
         File fichier = new File(nomFichier+".txt"); 
         fichier.delete();
     }
-	
+    
     /** 
      * permet de supprimer le fichier texte avec le nom mentionné en paramétre
      * @param nomFichier
@@ -99,11 +99,11 @@ public class EspaceTampon {
      * @throws FileNotFoundException
      */
     public static void lireFichierEntier(File fichier) throws FileNotFoundException {
-    	Scanner lecture = new Scanner(fichier);
-    	while(lecture.hasNextLine()) {
-    		System.out.println( lecture.nextLine()); 
-    		//TODO changer le sysout pour qu'il apparaisse dans l'interface plutot que dans la console
-    	}
+        Scanner lecture = new Scanner(fichier);
+        while(lecture.hasNextLine()) {
+            System.out.println( lecture.nextLine()); 
+            //TODO changer le sysout pour qu'il apparaisse dans l'interface plutot que dans la console
+        }
     }
     /**
      * lit le fichier courant en entier
@@ -111,20 +111,29 @@ public class EspaceTampon {
      * @throws FileNotFoundException
      */
     public static void lireFichierEntier() throws FileNotFoundException {
-    	Scanner lecture = new Scanner(fichier);
-    	while(lecture.hasNextLine()) {
-    		System.out.println( lecture.nextLine()); 
-    		//TODO changer le sysout pour qu'il apparaisse dans l'interface plutot que dans la console
-    	}
+        Scanner lecture = new Scanner(fichier);
+        while(lecture.hasNextLine()) {
+            System.out.println( lecture.nextLine()); 
+            //TODO changer le sysout pour qu'il apparaisse dans l'interface plutot que dans la console
+        }
     }
     /**
      * 
      * @param ligne
-     * @return
+     * @return true si la ligne existe false sinon
+     * @throws FileNotFoundException 
      */
-    public static boolean ligneExiste(int ligne) {
-		return false;//bouchon
-    	//TODO ecrire la methode
+    public static boolean ligneExiste(int ligne) throws FileNotFoundException {
+        Scanner lecture = new Scanner(fichier);
+        for(int indice =0;indice<ligne;indice++) {
+            
+            if(!lecture.hasNextLine()) {
+                return false;
+            }
+            lecture.nextLine();
+        }
+        return true;
+        //TODO ecrire la methode
     }
     /**
      * supprime une ligne mentionné du fichier courant
@@ -133,21 +142,28 @@ public class EspaceTampon {
      * @throws IOException 
      */
     public static void suppression1Ligne(int ligne) throws IOException {
-    	Scanner lecture = new Scanner(fichier);
-    	File fichierbis = new File(nomFichier+"bis.txt");
-    	
-    	if(!ligneExiste(ligne)) {
-    		throw new IOException("la ligne que vous souhaité supprimer n'existe pas");
-    	
-    	}
-    	for(int indice = 0; indice<ligne ; indice++) {
-    		
-    		//TODO ecrire ici dans fichier bis avec la methode qui permettra d'ecrire
-    	}
+        Scanner lecture = new Scanner(fichier);
+        File fichierbis = new File(nomFichier+"bis.txt");
+        
+        if(!ligneExiste(ligne)) {
+            throw new IOException("la ligne que vous souhaité supprimer n'existe pas");
+        
+        }
+        for(int indice = 0; indice<ligne ; indice++) {
+            
+            //TODO ecrire ici dans fichier bis avec la methode qui permettra d'ecrire
+        }
 
     }
+    
+    /** 
+     * Supprime plusieur ligne entre la ligneA et la ligneB
+     * @param nomFichier
+     * @param ligneA
+     * @param ligneB
+     */
     public static void suppressionPlusieurLigne(String nomFichier , int ligneA , int ligneB) {
-    	//TODO ecrire la methode aprés suppression 1 ligne
+        //TODO ecrire la methode aprés suppression 1 ligne
     }
     /**
      * methode qui permet d'ecrire une ligne de texte avant la ligne en paramétre
@@ -155,18 +171,23 @@ public class EspaceTampon {
      * @throws IOException 
      */
     public static void ecrireLigneAvant(int ligne) throws IOException {
-    	String ecritFinal="";
-    	FileWriter fw = new FileWriter(fichier);
-    	BufferedWriter ecrire = new BufferedWriter(fw);
-    	for(int indice = 1 ; indice < ligne ; indice++) {
-    		ecrire.newLine();
-    	}
-    	for(int caractere = 0;caractere<75;caractere++) {
-    		ecritFinal += aEcrire.charAt(caractere);
-    	}
-    	ecrire.write(ecritFinal);
-	    //TODO a finir il ya des soucis ici
+        String ecritFinal="";
+        FileWriter fw = new FileWriter(fichier);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        if(ligne == 0) {
+            for(int caractere = 0;caractere<75;caractere++) {
+                ecritFinal += aEcrire.charAt(caractere);
+            }
+        }else {
+            for(int indice = 1 ; indice < ligne ; indice++) {
+                ecrire.newLine();
+            }
+            for(int caractere = 0;caractere<75;caractere++) {
+                ecritFinal += aEcrire.charAt(caractere);
+            }
+        }
+        ecrire.write(ecritFinal);
+
+        ecrire.close();
     }
-
 }
-
