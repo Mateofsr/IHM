@@ -17,7 +17,24 @@ import java.io.Reader;
  */
 public class EspaceTampon {
 
-    private void creationFichier(String nomFichier) throws IOException {
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param nomFichier
+     */
+    public static void suppressionFichier(String nomFichier) {
+        File fichier = new File(nomFichier+".txt"); 
+        
+        if(fichier.exists()) { 
+             fichier.delete();
+        } else { 
+            System.out.println("le fichier n'existe pas"); 
+        } 
+    }
+    
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param nomFichier
+     * @throws IOException
+     */
+    public static void creationFichier(String nomFichier) throws IOException {
         int numero = 0;
         File fichier = new File(nomFichier+".txt");
         while(fichier.exists()) {
@@ -29,13 +46,16 @@ public class EspaceTampon {
 
     /** TODO commenter le rôle de cette méthode (SRP)
      * @param nomFichier
-     * @throws FileNotFoundException 
+     * @throws IOException 
      */
-    public void ouvrirFichier(String nomFichier) throws FileNotFoundException {
+    public static void ouvrirFichier(String nomFichier) throws IOException {
         File fichier = new File(nomFichier+"txt");
         if(fichier.exists()) {
             FileReader lire = new FileReader(nomFichier+".txt");
             BufferedReader lireFichier = new BufferedReader(lire);
+            while(lireFichier.readLine()!=null) {
+                //afficher dans l'interface le texte
+            }
         }else {
             throw new FileNotFoundException("fichier introuvable");
         }
