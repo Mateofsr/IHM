@@ -3,9 +3,11 @@
  */
 package application;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class EspaceTampon {
 
 	public static File fichierbis = new File(nomFichier+"bis.txt");
 	public static String aEcrire;
-	
+
 	/** 
 	 * permet de supprimer le fichier texte courant
 	 * 
@@ -57,6 +59,7 @@ public class EspaceTampon {
 	public static void creationFichier(String nomFichier) throws IOException {
 		int numero = 0;
 		File fichier = new File(nomFichier+".txt");
+		
 		while(fichier.exists()) {
 			numero++;
 			nomFichier+="("+numero+")";
@@ -64,8 +67,8 @@ public class EspaceTampon {
 			fichier.renameTo(fichier);
 		} 
 		fichier.createNewFile();
-		File fichierbis = new File(nomFichier+".txt");
-		fichier.createNewFile();
+		File fichierbis = new File(nomFichier+"bis.txt");
+		fichierbis.createNewFile();
 		ouvrirFichier(nomFichier);
 	}
 
@@ -214,7 +217,9 @@ public class EspaceTampon {
 	 */
 	public static void ecrireLigneAvant(int ligne) throws IOException {
 		String ecritFinal="";
-		Scanner lire = new Scanner(fichierbis);
+		int indice = 1;
+		FileReader read = new FileReader(fichierbis);
+		BufferedReader lire = new BufferedReader(read);
 		FileWriter fw = new FileWriter(fichierbis);
 		BufferedWriter ecrire = new BufferedWriter(fw);
 		if(ligne <= 0) {
@@ -225,13 +230,16 @@ public class EspaceTampon {
 		}else if( ligne == 1) {
 			for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
 				ecritFinal += aEcrire.charAt(caractere);
+				
 			}
 		}else {
-			for(int indice = 1 ; indice < ligne ; indice++) {
-				ecrire.write(lire.nextLine());
+			
+			while(lire.readLine() != null){
+				ecrire.write(lire.readLine()+"\n");
 				ecrire.newLine();
+				
 			}
-			for(int caractere = 0;caractere<75;caractere++) {
+			for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
 				ecritFinal += aEcrire.charAt(caractere);
 			}
 		}
@@ -362,6 +370,7 @@ public class EspaceTampon {
 			}
 			indice++;
 		}
+		lire.useRadix(0);
 		indice = 1;
 		while(lire.hasNextLine()) {
 			if(indice == emplacementCopie) {
@@ -396,7 +405,16 @@ public class EspaceTampon {
 
 
 	public static void main (String[]args) throws IOException {
-
+		creationFichier(nomFichier);
+		aEcrire = "mlgdf, ;:!fn, f,g f; gxc";
+		ecrireLigneAvant(1);
+		aEcrire = "mateo Faussurier et mathys se dispute";
+		ecrireLigneAvant(2);
+//		aEcrire = "mateo meurs encore top lane avec son maitre yi jgl";
+//		ecrireLigneApres(3);
+//		copie(2, 1);
+//		enregistrer(fichier);
+		
 
 	}
 }
