@@ -386,7 +386,9 @@ public class EspaceTampon {
 		suppression1Ligne(ligneADeplacer);
 	}
 	public static void deplacement(int ligneADeplacerA,int ligneADeplacerB,int ligne) throws IOException {
-		//TODO AFAIRE
+		copie(ligneADeplacerA, ligneADeplacerB, ligne);
+		suppressionPlusieurLigne(ligneADeplacerA, ligneADeplacerB);
+		
 	}
 	public static void fermeture() {
 		fichierbis.delete();
