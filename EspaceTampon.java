@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -311,24 +312,37 @@ public class EspaceTampon {
 		if(!ligneExiste(ligneDebut) || !ligneExiste(emplacementCopie)|| !ligneExiste(ligneFin)) {
 			throw new IllegalArgumentException("les ligne n'existe pas");
 		}
-		int ligne;
-		String sauvegarde;
+		int ligne = 1;
+		ArrayList<String> sauvegarde = new ArrayList<String>();
 		Scanner lire = new Scanner(fichierbis);
 		FileWriter fw = new FileWriter(fichierbis);
 		BufferedWriter ecrire = new BufferedWriter(fw);
 		if(ligneFin<ligneDebut) {
 			ligneFin = ligneDebut;
-			ligneDebut = ligneFin;
+			ligneDebut = ligneFin;	
+		}
+		while(!lire.hasNextLine()) {
+			ecrire.write(lire.nextLine());
+			ecrire.newLine();
+			while(ligne>= ligneDebut && ligne<= ligneFin) {
+				sauvegarde.add(lire.next());
+			}
 			
+			ligne++;
 		}
-		//TODO a reprendre aprés copie simple
-	}
-	public static void deplacement(int ligneADeplacer , int ligne) throws IOException {
-		if(!ligneExiste(ligneADeplacer)|| ! ligneExiste(ligne)) {
-			throw new IllegalArgumentException("les ligne référencé n'existepas");
+		lire.useRadix(0);
+		ligne = 0;
+		while(!lire.hasNextLine()) {
+			if(ligne == emplacementCopie) {
+				for(int i=0;i<sauvegarde.size();i++) {
+					ecrire.write(sauvegarde.get(i));
+					ecrire.newLine();
+				}
+			}else {
+				ecrire.write(lire.nextLine());
+				ecrire.newLine();
+			}
 		}
-		copie(ligneADeplacer,ligne);                                                                             
-		suppression1Ligne(ligneADeplacer);
 	}
 	public static void copie(int ligne , int emplacementCopie) throws IOException {
 
@@ -363,6 +377,16 @@ public class EspaceTampon {
 		}
 		ecrire.close();
 		lire.close();
+	}
+	public static void deplacement(int ligneADeplacer , int ligne) throws IOException {
+		if(!ligneExiste(ligneADeplacer)|| ! ligneExiste(ligne)) {
+			throw new IllegalArgumentException("les ligne référencé n'existepas");
+		}
+		copie(ligneADeplacer,ligne);                                                                             
+		suppression1Ligne(ligneADeplacer);
+	}
+	public static void deplacement(int ligneADeplacerA,int ligneADeplacerB,int ligne) throws IOException {
+		//TODO AFAIRE
 	}
 	public static void fermeture() {
 		fichierbis.delete();
