@@ -163,28 +163,39 @@ public class EspaceTampon {
      */
     public static void suppression1Ligne(int ligne) throws IOException {
 
-        Scanner lecture = new Scanner(fichierbis);
-        FileWriter wesh = new FileWriter(fichierbis);
-        BufferedWriter ecrire = new BufferedWriter(wesh);
-        int indice = 0;
-        if(!ligneExiste(ligne)) {
-            lecture.close();
-            ecrire.close();
-            throw new IOException("la ligne que vous souhaité supprimer n'existe pas");
-        }
-        while(lecture.hasNextLine()) {
-            indice++;
-            if(indice == ligne) {
-                lecture.nextLine();
-            }
-            ecrire.write(lecture.nextLine());
-            ecrire.newLine();
-        }
-        lecture.nextLine();
-        ecrire.close();
-        lecture.close();
-    }
+        String ecritFinal="";
+        int indice = 1;
+        String ligneCourante = "";
+        Scanner lire = new Scanner(fichierbis);
 
+
+        if(ligne <= 0|| ligne>100) {
+            lire.close();
+            throw new IllegalArgumentException("Il n'existe pas de ligne négative ou supérieure a 100");
+
+        }
+        while(lire.hasNextLine()){
+            if(indice==ligne) {
+                ligneCourante+="";
+                lire.nextLine();
+            }
+
+            ligneCourante += lire.nextLine()+"\n";
+            indice++;
+        }
+
+
+        lire.close();
+        fichierbis.delete();
+
+        FileWriter fw = new FileWriter(fichierbis,true);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        ecrire.write(ligneCourante);
+
+        ecrire.close();
+        System.out.println(ligneCourante);
+
+    }
     /** 
      * Supprime plusieur ligne entre la ligneA et la ligneB
      * @param nomFichier
@@ -197,22 +208,33 @@ public class EspaceTampon {
             throw new IllegalArgumentException("aucune des ligne séléctionnez n'existe");
         }
 
-        Scanner lecture = new Scanner(fichierbis);
-        FileWriter wesh = new FileWriter(fichierbis);
-        BufferedWriter ecrire = new BufferedWriter(wesh);
-        int indice = 1;
 
-        while(lecture.hasNextLine()) {
+        String ecritFinal="";
+        int indice = 1;
+        String ligneCourante = "";
+        Scanner lire = new Scanner(fichierbis);
+        while(lire.hasNextLine()){
             if((indice>= ligneA && indice <= ligneB) ||(indice>= ligneB && indice <= ligneA)){
-                lecture.nextLine();
-            }else {
-                ecrire.write(lecture.nextLine());
-                ecrire.newLine();
+
+                ligneCourante+="";
+                lire.nextLine();
             }
+
+            ligneCourante += lire.nextLine()+"\n";
             indice++;
         }
+
+
+        lire.close();
+        fichierbis.delete();
+
+        FileWriter fw = new FileWriter(fichierbis,true);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        ecrire.write(ligneCourante);
+
         ecrire.close();
-        lecture.close();
+        System.out.println(ligneCourante);
+
 
     }
     /**
@@ -230,18 +252,27 @@ public class EspaceTampon {
         for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
             ecritFinal += aEcrire.charAt(caractere);
         }
-        if(ligne <= 0) {
+        if(ligne <= 0|| ligne>100) {
             lire.close();
-            throw new IllegalArgumentException("Il n'existe pas de ligne négative");
+            throw new IllegalArgumentException("Il n'existe pas de ligne négative ou supérieure a 100");
 
+        }else if(ligne ==1) {
+            ligneCourante+= aEcrire+"\n"; 
         }
         while(lire.hasNextLine()){
             if(indice==ligne) {
                 ligneCourante+=aEcrire+"\n";
             }
-            
+
             ligneCourante += lire.nextLine()+"\n";
             indice++;
+        }
+        for(;indice<=ligne ;indice++) {
+            if(indice==ligne) {
+                ligneCourante+=aEcrire+"\n";
+            }else {
+                ligneCourante +="\n";
+            }
         }
 
         lire.close();
@@ -284,7 +315,7 @@ public class EspaceTampon {
                 ligneCourante+=aEcrire+"\n";
             }
             indice++;
-            
+
         }
 
         lire.close();
@@ -324,26 +355,8 @@ public class EspaceTampon {
         if(!ligneExiste(ligne)) {
             throw new IllegalArgumentException("la ligne n'existe pas ");
         }
-        String ecritFinal="";
-        Scanner lire = new Scanner(fichierbis);
-        FileWriter fw = new FileWriter(fichierbis);
-        BufferedWriter ecrire = new BufferedWriter(fw);
-        if( ligne == 1) {
-            for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
-                ecritFinal += aEcrire.charAt(caractere);
-            }
-        }else {
-            for(int indice = 0 ; indice < ligne ; indice++) {
-                ecrire.write(lire.nextLine());
-                ecrire.newLine();
-            }
-            for(int caractere = 0;caractere<75;caractere++) {
-                ecritFinal += aEcrire.charAt(caractere);
-            }
-        }
-        lire.close();
-        ecrire.write(ecritFinal);
-        ecrire.close();
+        suppression1Ligne(ligne);
+        ecrireLigneApres(ligne);
 
     }
 
@@ -465,8 +478,8 @@ public class EspaceTampon {
      * @throws IOException
      */
     public static void main (String[]args) throws IOException {
-        aEcrire="lentug hdnl";
-        ecrireLigneApres(2);
+
+        suppressionPlusieurLigne(4, 5);
         //              copie(2, 1);
         //      enregistrer(fichier);
 
