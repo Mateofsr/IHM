@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -84,11 +85,22 @@ public class EspaceTampon {
      */
     public static void ouvrirFichier(String nomFichier) throws IOException {
         fichier = new File(nomFichier+".txt");
-
+        Scanner lire = new Scanner(fichier);
+        String ligneCourante="";
         if(fichier.exists()) {
             lireFichierEntier(fichier);
-            //TODO creer fichier bis
-
+            fichierbis = new File(nomFichier+"bis.txt");
+            fichierbis.createNewFile();
+            while(lire.hasNextLine()){
+                ligneCourante+=lire.nextLine()+"\n";
+            }
+            lire.close();
+            FileWriter writer = new FileWriter(fichierbis);
+            BufferedWriter ecrire = new BufferedWriter(writer);
+            ecrire.write(ligneCourante);
+            ecrire.close();
+            
+            
         }else {
             throw new FileNotFoundException("fichier introuvable");
         }
@@ -98,10 +110,22 @@ public class EspaceTampon {
      * @throws IOException 
      */
     public static void ouvrirFichier() throws IOException {
-        File fichier = new File(nomFichier+".txt");
-
+        
+        Scanner lire = new Scanner(fichier);
+        String ligneCourante="";
         if(fichier.exists()) {
             lireFichierEntier(fichier);
+            fichierbis.createNewFile();
+            while(lire.hasNextLine()){
+                ligneCourante+=lire.nextLine()+"\n";
+            }
+            lire.close();
+            FileWriter writer = new FileWriter(fichierbis);
+            BufferedWriter ecrire = new BufferedWriter(writer);
+            ecrire.write(ligneCourante);
+            ecrire.close();
+            
+            
         }else {
             throw new FileNotFoundException("fichier introuvable");
         }
