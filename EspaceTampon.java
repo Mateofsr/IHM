@@ -12,7 +12,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -336,7 +335,7 @@ public class EspaceTampon {
      */
     public static void enregistrer(File fichier) throws IOException {
         Scanner lecture = new Scanner(fichierbis);
-        FileWriter wesh = new FileWriter(fichier);
+        FileWriter wesh = new FileWriter(fichier,true);
         BufferedWriter ecrire = new BufferedWriter(wesh);
         while(lecture.hasNextLine()) {
             ecrire.write(lecture.nextLine());
@@ -367,40 +366,48 @@ public class EspaceTampon {
      * @throws IOException
      */
     public static void copie(int ligneDebut , int ligneFin, int emplacementCopie) throws IOException {
-        if(!ligneExiste(ligneDebut) || !ligneExiste(emplacementCopie)|| !ligneExiste(ligneFin)) {
-            throw new IllegalArgumentException("les ligne n'existe pas");
+        if(!ligneExiste(ligneDebut)|| !ligneExiste(emplacementCopie)|| !ligneExiste(ligneFin)) {
+            throw new IllegalArgumentException("impossible de copier vers une ligne qui n'existe pas");
         }
-        int ligne = 1;
-        ArrayList<String> sauvegarde = new ArrayList<String>();
+        
+        String ecritFinal="";
+        int indice = 1;
+        String ligneCourante = "";
+        String sauvegarde="";
         Scanner lire = new Scanner(fichierbis);
-        FileWriter fw = new FileWriter(fichierbis);
-        BufferedWriter ecrire = new BufferedWriter(fw);
-        if(ligneFin<ligneDebut) {
-            ligneFin = ligneDebut;
-            ligneDebut = ligneFin;  
-        }
-        while(!lire.hasNextLine()) {
-            ecrire.write(lire.nextLine());
-            ecrire.newLine();
-            while(ligne>= ligneDebut && ligne<= ligneFin) {
-                sauvegarde.add(lire.next());
+        Scanner lire2 = new Scanner(fichierbis);
+        while(lire.hasNextLine()){
+            while(indice>= ligneDebut && indice<= ligneFin) {
+                sauvegarde+=lire.next()+"\n";
+                ligneCourante+=lire.nextLine();
+                indice++;
             }
+            lire.nextLine();
+            indice++;
+        }
+        indice=1;
+        while(lire2.hasNextLine()){
 
-            ligne++;
-        }
-        lire.useRadix(0);
-        ligne = 0;
-        while(!lire.hasNextLine()) {
-            if(ligne == emplacementCopie) {
-                for(int i=0;i<sauvegarde.size();i++) {
-                    ecrire.write(sauvegarde.get(i));
-                    ecrire.newLine();
-                }
+            if(indice==emplacementCopie) {
+                ligneCourante += sauvegarde+"\n";
+
             }else {
-                ecrire.write(lire.nextLine());
-                ecrire.newLine();
+                ligneCourante += lire2.nextLine()+"\n";
+                
             }
+            indice++;
         }
+
+        lire.close();
+        lire2.close();
+        fichierbis.delete();
+
+        FileWriter fw = new FileWriter(fichierbis,true);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        ecrire.write(ligneCourante);
+
+        ecrire.close();
+
     }
     /** TODO commenter le rôle de cette méthode (SRP)
      * @param ligne
@@ -412,35 +419,44 @@ public class EspaceTampon {
         if(!ligneExiste(ligne)|| !ligneExiste(emplacementCopie)) {
             throw new IllegalArgumentException("impossible de copier vers une ligne qui n'existe pas");
         }
+        String ecritFinal="";
         int indice = 1;
-        String sauvegarde="";
+        String ligneCourante = "";
+        String sauvegarde = "";
         Scanner lire = new Scanner(fichierbis);
-        FileWriter fw = new FileWriter(fichierbis);
-        BufferedWriter ecrire = new BufferedWriter(fw);
-        while(lire.hasNextLine()) {
-            ecrire.write(lire.nextLine());
-            ecrire.newLine();
-            if(indice == ligne) {
-                sauvegarde = lire.next();   
+        Scanner lire2 = new Scanner(fichierbis);
+        while(lire.hasNextLine()){
+            if(indice==ligne) {
+                sauvegarde=lire.next();
+            }
+            lire.nextLine();
+            indice++;
+        }
+        indice=1;
+
+        while(lire2.hasNextLine()){
+
+            if(indice==emplacementCopie) {
+                ligneCourante += sauvegarde+"\n";
+
+            }else {
+                ligneCourante += lire2.nextLine()+"\n";
             }
             indice++;
         }
 
-        indice = 1;
-        while(lire.hasNextLine()) {
-            if(indice == emplacementCopie) {
-                ecrire.write(sauvegarde);
-                ecrire.newLine();
-                lire.nextLine();
-            }else {
 
-
-                ecrire.write(lire.nextLine());
-                ecrire.newLine();
-            }
-        }
-        ecrire.close();
         lire.close();
+        lire2.close();
+        fichierbis.delete();
+
+        FileWriter fw = new FileWriter(fichierbis,true);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        ecrire.write(ligneCourante);
+
+        ecrire.close();
+        System.out.println(ligneCourante);
+
     }
     /** TODO commenter le rôle de cette méthode (SRP)
      * @param ligneADeplacer
@@ -479,7 +495,7 @@ public class EspaceTampon {
      */
     public static void main (String[]args) throws IOException {
 
-        suppressionPlusieurLigne(4, 5);
+        copie(1,4,5);
         //              copie(2, 1);
         //      enregistrer(fichier);
 
