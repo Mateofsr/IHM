@@ -1,3 +1,4 @@
+/*
  * FichierTexte.java          30 mai 2022
  * IUT de Rodez,Info1 2021-2022 pas de copyright
  */
@@ -10,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,401 +22,454 @@ import java.util.Scanner;
  */
 public class EspaceTampon {
 
-	/**création d'un nom de fichier par défaut*/
-	public static String nomFichier="nomParDéfaut";
-	/**création d'un fichier par défaut*/
-	public static File fichier = new File(nomFichier+".txt");
+    /**création d'un nom de fichier par défaut*/
+    public static String nomFichier="nomParDéfaut";
+    /**création d'un fichier par défaut*/
+    public static File fichier = new File(nomFichier+".txt");
 
-	public static File fichierbis = new File(nomFichier+"bis.txt");
-	public static String aEcrire;
+    /** TODO commenter le rôle de ce champ (attribut,role associatif) */
+    public static File fichierbis = new File(nomFichier+"bis.txt");
+    /** TODO commenter le rôle de ce champ (attribut,role associatif) */
+    public static String aEcrire;
 
-	/** 
-	 * permet de supprimer le fichier texte courant
-	 * 
-	 */
-	public static void suppressionFichier() {
-		File fichier = new File(nomFichier+".txt"); 
-		fichier.delete();
-	}
+    /** 
+     * permet de supprimer le fichier texte courant
+     * 
+     */
+    public static void suppressionFichier() {
+        File fichier = new File(nomFichier+".txt"); 
+        fichier.delete();
+    }
 
-	/** 
-	 * permet de supprimer le fichier texte avec le nom mentionné en paramétre
-	 * @param nomFichier
-	 */
-	public static void suppressionFichier(String nomFichier) {
-		File fichier = new File(nomFichier+".txt"); 
+    /** 
+     * permet de supprimer le fichier texte avec le nom mentionné en paramétre
+     * @param nomFichier
+     */
+    public static void suppressionFichier(String nomFichier) {
+        File fichier = new File(nomFichier+".txt"); 
 
-		if(fichier.exists()) { 
-			fichier.delete();
-		} else { 
-			System.out.println("le fichier n'existe pas ou le nom mentionné n'est pas le bon"); 
-		} 
-	}
+        if(fichier.exists()) { 
+            fichier.delete();
+        } else { 
+            System.out.println("le fichier n'existe pas ou le nom mentionné n'est pas le bon"); 
+        } 
+    }
 
-	/** 
-	 * permet de créer un nouveau fichier texte avec comme nom spécifié en paramétre
-	 * @param nomFichier
-	 * @throws IOException
-	 */
-	public static void creationFichier(String nomFichier) throws IOException {
-		int numero = 0;
-		File fichier = new File(nomFichier+".txt");
-		
-		while(fichier.exists()) {
-			numero++;
-			nomFichier+="("+numero+")";
-			fichier = new File(nomFichier+".txt");
-			fichier.renameTo(fichier);
-		} 
-		fichier.createNewFile();
-		File fichierbis = new File(nomFichier+"bis.txt");
-		fichierbis.createNewFile();
-		ouvrirFichier(nomFichier);
-	}
+    /** 
+     * permet de créer un nouveau fichier texte avec comme nom spécifié en paramétre
+     * @param nomFichier
+     * @throws IOException
+     */
+    public static void creationFichier(String nomFichier) throws IOException {
+        int numero = 0;
+        File fichier = new File(nomFichier+".txt");
 
-	/** 
-	 * methode qui permette d'ouvrir et d'afficher le fichier texte dont le nom est spécifié en 
-	 * paramétre sur l'interface graphique
-	 * @param nomFichier
-	 * @throws IOException 
-	 */
-	public static void ouvrirFichier(String nomFichier) throws IOException {
-		fichier = new File(nomFichier+".txt");
+        while(fichier.exists()) {
+            numero++;
+            nomFichier+="("+numero+")";
+            fichier = new File(nomFichier+".txt");
+            fichier.renameTo(fichier);
+        } 
+        fichier.createNewFile();
+        File fichierbis = new File(nomFichier+"bis.txt");
 
-		if(fichier.exists()) {
-			lireFichierEntier(fichier);
-			//TODO creer fichier bis
+        fichierbis.createNewFile();
+        ouvrirFichier(nomFichier);
+    }
 
-		}else {
-			throw new FileNotFoundException("fichier introuvable");
-		}
-	}
-	/** 
-	 * methode qui permette d'ouvrir et d'afficher le fichier texte courant
-	 * @throws IOException 
-	 */
-	public static void ouvrirFichier() throws IOException {
-		File fichier = new File(nomFichier+".txt");
+    /** 
+     * methode qui permette d'ouvrir et d'afficher le fichier texte dont le nom est spécifié en 
+     * paramétre sur l'interface graphique
+     * @param nomFichier
+     * @throws IOException 
+     */
+    public static void ouvrirFichier(String nomFichier) throws IOException {
+        fichier = new File(nomFichier+".txt");
 
-		if(fichier.exists()) {
-			lireFichierEntier(fichier);
-		}else {
-			throw new FileNotFoundException("fichier introuvable");
-		}
-	}
-	/**
-	 * lit le fichier mentionné en paramétre en entier
-	 * @param fichier
-	 * @throws IOException 
-	 */
-	public static void lireFichierEntier(File fichier) throws IOException {
-		Scanner lecture = new Scanner(fichier);
-		FileWriter writer = new FileWriter(fichier);
-		BufferedWriter ecrire = new BufferedWriter(writer);
-		while(lecture.hasNextLine()) {
+        if(fichier.exists()) {
+            lireFichierEntier(fichier);
+            //TODO creer fichier bis
 
-			ecrire.write(lecture.nextLine());
-			ecrire.newLine();
-		}
-		ecrire.close();
-		lecture.close();
-	}
-	/**
-	 * lit le fichier courant en entier
-	 * @param fichier
-	 * @throws FileNotFoundException
-	 */
-	public static void lireFichierEntier() throws FileNotFoundException {
-		Scanner lecture = new Scanner(fichier);
-		while(lecture.hasNextLine()) {
-			System.out.println( lecture.nextLine()); 
-			//TODO changer le sysout pour qu'il apparaisse dans l'interface plutot que dans la console
-		}
-		lecture.close();
-	}
-	/**
-	 * 
-	 * @param ligne
-	 * @return true si la ligne existe false sinon
-	 * @throws FileNotFoundException 
-	 */
-	public static boolean ligneExiste(int ligne) throws FileNotFoundException {
-		Scanner lecture = new Scanner(fichier);
-		for(int indice =0;indice<ligne;indice++) {
+        }else {
+            throw new FileNotFoundException("fichier introuvable");
+        }
+    }
+    /** 
+     * methode qui permette d'ouvrir et d'afficher le fichier texte courant
+     * @throws IOException 
+     */
+    public static void ouvrirFichier() throws IOException {
+        File fichier = new File(nomFichier+".txt");
 
-			if(!lecture.hasNextLine()) {
-				return false;
-			}
-			lecture.nextLine();
-		}
-		lecture.close();
-		return true;
-	}
-	/**
-	 * supprime une ligne mentionné du fichier courant
-	 * @param fichier
-	 * @param ligne
-	 * @throws IOException 
-	 */
-	public static void suppression1Ligne(int ligne) throws IOException {
+        if(fichier.exists()) {
+            lireFichierEntier(fichier);
+        }else {
+            throw new FileNotFoundException("fichier introuvable");
+        }
+    }
+    /**
+     * lit le fichier mentionné en paramétre en entier
+     * @param fichier
+     * @throws IOException 
+     */
+    public static void lireFichierEntier(File fichier) throws IOException {
+        Scanner lecture = new Scanner(fichier);
+        FileWriter writer = new FileWriter(fichier);
+        BufferedWriter ecrire = new BufferedWriter(writer);
+        while(lecture.hasNextLine()) {
 
-		Scanner lecture = new Scanner(fichierbis);
-		FileWriter wesh = new FileWriter(fichierbis);
-		BufferedWriter ecrire = new BufferedWriter(wesh);
-		int indice = 0;
-		if(!ligneExiste(ligne)) {
-			lecture.close();
-			ecrire.close();
-			throw new IOException("la ligne que vous souhaité supprimer n'existe pas");
-		}
-		while(lecture.hasNextLine()) {
-			indice++;
-			if(indice == ligne) {
-				lecture.nextLine();
-			}
-			ecrire.write(lecture.nextLine());
-			ecrire.newLine();
-		}
-		lecture.nextLine();
-		ecrire.close();
-		lecture.close();
-	}
+            ecrire.write(lecture.nextLine());
+            ecrire.newLine();
+        }
+        ecrire.close();
+        lecture.close();
+    }
+    /**
+     * lit le fichier courant en entier
+     * @param fichier
+     * @throws FileNotFoundException
+     */
+    public static void lireFichierEntier() throws FileNotFoundException {
+        Scanner lecture = new Scanner(fichier);
+        while(lecture.hasNextLine()) {
+            System.out.println( lecture.nextLine()); 
+            //TODO changer le sysout pour qu'il apparaisse dans l'interface plutot que dans la console
+        }
+        lecture.close();
+    }
+    /**
+     * 
+     * @param ligne
+     * @return true si la ligne existe false sinon
+     * @throws FileNotFoundException 
+     */
+    public static boolean ligneExiste(int ligne) throws FileNotFoundException {
+        Scanner lecture = new Scanner(fichierbis);
+        for(int indice =0;indice<ligne;indice++) {
 
-	/** 
-	 * Supprime plusieur ligne entre la ligneA et la ligneB
-	 * @param nomFichier
-	 * @param ligneA
-	 * @param ligneB
-	 * @throws IOException 
-	 */
-	public static void suppressionPlusieurLigne(int ligneA , int ligneB) throws IOException {
-		if(!ligneExiste(ligneB)&& !ligneExiste(ligneA)) {
-			throw new IllegalArgumentException("aucune des ligne séléctionnez n'existe");
-		}
+            if(!lecture.hasNextLine()) {
+                return false;
+            }
+            lecture.nextLine();
+        }
+        lecture.close();
+        return true;
+    }
+    /**
+     * supprime une ligne mentionné du fichier courant
+     * @param fichier
+     * @param ligne
+     * @throws IOException 
+     */
+    public static void suppression1Ligne(int ligne) throws IOException {
 
-		Scanner lecture = new Scanner(fichierbis);
-		FileWriter wesh = new FileWriter(fichierbis);
-		BufferedWriter ecrire = new BufferedWriter(wesh);
-		int indice = 1;
+        Scanner lecture = new Scanner(fichierbis);
+        FileWriter wesh = new FileWriter(fichierbis);
+        BufferedWriter ecrire = new BufferedWriter(wesh);
+        int indice = 0;
+        if(!ligneExiste(ligne)) {
+            lecture.close();
+            ecrire.close();
+            throw new IOException("la ligne que vous souhaité supprimer n'existe pas");
+        }
+        while(lecture.hasNextLine()) {
+            indice++;
+            if(indice == ligne) {
+                lecture.nextLine();
+            }
+            ecrire.write(lecture.nextLine());
+            ecrire.newLine();
+        }
+        lecture.nextLine();
+        ecrire.close();
+        lecture.close();
+    }
 
-		while(lecture.hasNextLine()) {
-			if((indice>= ligneA && indice <= ligneB) ||(indice>= ligneB && indice <= ligneA)){
-				lecture.nextLine();
-			}else {
-				ecrire.write(lecture.nextLine());
-				ecrire.newLine();
-			}
-			indice++;
-		}
-		ecrire.close();
-		lecture.close();
+    /** 
+     * Supprime plusieur ligne entre la ligneA et la ligneB
+     * @param nomFichier
+     * @param ligneA
+     * @param ligneB
+     * @throws IOException 
+     */
+    public static void suppressionPlusieurLigne(int ligneA , int ligneB) throws IOException {
+        if(!ligneExiste(ligneB)&& !ligneExiste(ligneA)) {
+            throw new IllegalArgumentException("aucune des ligne séléctionnez n'existe");
+        }
 
-	}
-	/**
-	 * methode qui permet d'ecrire une ligne de texte avant la ligne en paramétre
-	 * @param ligne
-	 * @throws IOException 
-	 */
-	public static void ecrireLigneAvant(int ligne) throws IOException {
-		String ecritFinal="";
-		int indice = 1;
-		FileReader read = new FileReader(fichierbis);
-		BufferedReader lire = new BufferedReader(read);
-		FileWriter fw = new FileWriter(fichierbis);
-		BufferedWriter ecrire = new BufferedWriter(fw);
-		if(ligne <= 0) {
-			lire.close();
-			ecrire.close();
-			throw new IllegalArgumentException("Il n'existe pas de ligne négative");
+        Scanner lecture = new Scanner(fichierbis);
+        FileWriter wesh = new FileWriter(fichierbis);
+        BufferedWriter ecrire = new BufferedWriter(wesh);
+        int indice = 1;
 
-		}else if( ligne == 1) {
-			for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
-				ecritFinal += aEcrire.charAt(caractere);
-				
-			}
-		}else {
-			
-			while(lire.readLine() != null){
-				ecrire.write(lire.readLine()+"\n");
-				ecrire.newLine();
-				
-			}
-			for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
-				ecritFinal += aEcrire.charAt(caractere);
-			}
-		}
-		lire.close();
-		ecrire.write(ecritFinal);
-		ecrire.close();
+        while(lecture.hasNextLine()) {
+            if((indice>= ligneA && indice <= ligneB) ||(indice>= ligneB && indice <= ligneA)){
+                lecture.nextLine();
+            }else {
+                ecrire.write(lecture.nextLine());
+                ecrire.newLine();
+            }
+            indice++;
+        }
+        ecrire.close();
+        lecture.close();
 
-	}
-
-	public static void ecrireLigneApres(int ligne) throws IOException {
-		if(!ligneExiste(ligne)) {
-			throw new IllegalArgumentException("la ligne n'existe pas ");
-		}
-		String ecritFinal="";
-		Scanner lire = new Scanner(fichierbis);
-		FileWriter fw = new FileWriter(fichierbis);
-		BufferedWriter ecrire = new BufferedWriter(fw);
-		if( ligne == 1) {
-			for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
-				ecritFinal += aEcrire.charAt(caractere);
-			}
-		}else {
-			for(int indice = 0 ; indice < ligne ; indice++) {
-				ecrire.write(lire.nextLine());
-				ecrire.newLine();
-			}
-			for(int caractere = 0;caractere<75;caractere++) {
-				ecritFinal += aEcrire.charAt(caractere);
-			}
-		}
-		lire.close();
-		ecrire.write(ecritFinal);
-		ecrire.close();
-
-	}
-
-	public static void enregistrer(File fichier) throws IOException {
-		Scanner lecture = new Scanner(fichierbis);
-		FileWriter wesh = new FileWriter(fichier);
-		BufferedWriter ecrire = new BufferedWriter(wesh);
-		while(lecture.hasNextLine()) {
-			ecrire.write(lecture.nextLine());
-			ecrire.newLine();
-		}
-		lecture.close();
-		ecrire.close();
-		fermeture();;
-	}
-
-	public static void modifier(int ligne) throws IOException {
-		if(!ligneExiste(ligne)) {
-			throw new IllegalArgumentException("la ligne n'existe pas ");
-		}
-		String ecritFinal="";
-		Scanner lire = new Scanner(fichierbis);
-		FileWriter fw = new FileWriter(fichierbis);
-		BufferedWriter ecrire = new BufferedWriter(fw);
-		if( ligne == 1) {
-			for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
-				ecritFinal += aEcrire.charAt(caractere);
-			}
-		}else {
-			for(int indice = 0 ; indice < ligne ; indice++) {
-				ecrire.write(lire.nextLine());
-				ecrire.newLine();
-			}
-			for(int caractere = 0;caractere<75;caractere++) {
-				ecritFinal += aEcrire.charAt(caractere);
-			}
-		}
-		lire.close();
-		ecrire.write(ecritFinal);
-		ecrire.close();
-
-	}
-
-	public static void copie(int ligneDebut , int ligneFin, int emplacementCopie) throws IOException {
-		if(!ligneExiste(ligneDebut) || !ligneExiste(emplacementCopie)|| !ligneExiste(ligneFin)) {
-			throw new IllegalArgumentException("les ligne n'existe pas");
-		}
-		int ligne = 1;
-		ArrayList<String> sauvegarde = new ArrayList<String>();
-		Scanner lire = new Scanner(fichierbis);
-		FileWriter fw = new FileWriter(fichierbis);
-		BufferedWriter ecrire = new BufferedWriter(fw);
-		if(ligneFin<ligneDebut) {
-			ligneFin = ligneDebut;
-			ligneDebut = ligneFin;	
-		}
-		while(!lire.hasNextLine()) {
-			ecrire.write(lire.nextLine());
-			ecrire.newLine();
-			while(ligne>= ligneDebut && ligne<= ligneFin) {
-				sauvegarde.add(lire.next());
-			}
-			
-			ligne++;
-		}
-		lire.useRadix(0);
-		ligne = 0;
-		while(!lire.hasNextLine()) {
-			if(ligne == emplacementCopie) {
-				for(int i=0;i<sauvegarde.size();i++) {
-					ecrire.write(sauvegarde.get(i));
-					ecrire.newLine();
-				}
-			}else {
-				ecrire.write(lire.nextLine());
-				ecrire.newLine();
-			}
-		}
-	}
-	public static void copie(int ligne , int emplacementCopie) throws IOException {
-
-		if(!ligneExiste(ligne)|| !ligneExiste(emplacementCopie)) {
-			throw new IllegalArgumentException("impossible de copier vers une ligne qui n'existe pas");
-		}
-		int indice = 1;
-		String sauvegarde="";
-		Scanner lire = new Scanner(fichierbis);
-		FileWriter fw = new FileWriter(fichierbis);
-		BufferedWriter ecrire = new BufferedWriter(fw);
-		while(lire.hasNextLine()) {
-			ecrire.write(lire.nextLine());
-			ecrire.newLine();
-			if(indice == ligne) {
-				sauvegarde = lire.next();	
-			}
-			indice++;
-		}
-		lire.useRadix(0);
-		indice = 1;
-		while(lire.hasNextLine()) {
-			if(indice == emplacementCopie) {
-				ecrire.write(sauvegarde);
-				ecrire.newLine();
-				lire.nextLine();
-			}else {
+    }
+    /**
+     * methode qui permet d'ecrire une ligne de texte avant la ligne en paramétre
+     * @param ligne
+     * @throws IOException 
+     */
+    public static void ecrireLigneAvant(int ligne) throws IOException {
+        String ecritFinal="";
+        int indice = 1;
+        String ligneCourante = "";
+        Scanner lire = new Scanner(fichierbis);
 
 
-				ecrire.write(lire.nextLine());
-				ecrire.newLine();
-			}
-		}
-		ecrire.close();
-		lire.close();
-	}
-	public static void deplacement(int ligneADeplacer , int ligne) throws IOException {
-		if(!ligneExiste(ligneADeplacer)|| ! ligneExiste(ligne)) {
-			throw new IllegalArgumentException("les ligne référencé n'existepas");
-		}
-		copie(ligneADeplacer,ligne);                                                                             
-		suppression1Ligne(ligneADeplacer);
-	}
-	public static void deplacement(int ligneADeplacerA,int ligneADeplacerB,int ligne) throws IOException {
-		copie(ligneADeplacerA, ligneADeplacerB, ligne);
-		suppressionPlusieurLigne(ligneADeplacerA, ligneADeplacerB);
-		
-	}
-	public static void fermeture() {
-		fichierbis.delete();
-	}
+        for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
+            ecritFinal += aEcrire.charAt(caractere);
+        }
+        if(ligne <= 0) {
+            lire.close();
+            throw new IllegalArgumentException("Il n'existe pas de ligne négative");
+
+        }
+        while(lire.hasNextLine()){
+            if(indice==ligne) {
+                ligneCourante+=aEcrire+"\n";
+            }
+            
+            ligneCourante += lire.nextLine()+"\n";
+            indice++;
+        }
+
+        lire.close();
+        fichierbis.delete();
+
+        FileWriter fw = new FileWriter(fichierbis,true);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        ecrire.write(ligneCourante);
+
+        ecrire.close();
+        System.out.println(ligneCourante);
+
+    }
+
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param ligne
+     * @throws IOException
+     */
+    public static void ecrireLigneApres(int ligne) throws IOException {
+        if(!ligneExiste(ligne)) {
+            throw new IllegalArgumentException("la ligne n'existe pas ");
+        }
+        String ecritFinal="";
+        int indice = 1;
+        String ligneCourante = "";
+        Scanner lire = new Scanner(fichierbis);
 
 
-	public static void main (String[]args) throws IOException {
-		creationFichier(nomFichier);
-		aEcrire = "mlgdf, ;:!fn, f,g f; gxc";
-		ecrireLigneAvant(1);
-		aEcrire = "mateo Faussurier et mathys se dispute";
-		ecrireLigneAvant(2);
-//		aEcrire = "mateo meurs encore top lane avec son maitre yi jgl";
-//		ecrireLigneApres(3);
-//		copie(2, 1);
-//		enregistrer(fichier);
-		
+        for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
+            ecritFinal += aEcrire.charAt(caractere);
+        }
+        if(ligne <= 0) {
+            lire.close();
+            throw new IllegalArgumentException("Il n'existe pas de ligne négative");
 
-	}
+        }
+        while(lire.hasNextLine()){
+            ligneCourante += lire.nextLine()+"\n";
+            if(indice==ligne) {
+                ligneCourante+=aEcrire+"\n";
+            }
+            indice++;
+            
+        }
+
+        lire.close();
+        fichierbis.delete();
+
+        FileWriter fw = new FileWriter(fichierbis,true);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        ecrire.write(ligneCourante);
+
+        ecrire.close();
+        System.out.println(ligneCourante);
+
+    }
+
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param fichier
+     * @throws IOException
+     */
+    public static void enregistrer(File fichier) throws IOException {
+        Scanner lecture = new Scanner(fichierbis);
+        FileWriter wesh = new FileWriter(fichier);
+        BufferedWriter ecrire = new BufferedWriter(wesh);
+        while(lecture.hasNextLine()) {
+            ecrire.write(lecture.nextLine());
+            ecrire.newLine();
+        }
+        lecture.close();
+        ecrire.close();
+        fermeture();;
+    }
+
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param ligne
+     * @throws IOException
+     */
+    public static void modifier(int ligne) throws IOException {
+        if(!ligneExiste(ligne)) {
+            throw new IllegalArgumentException("la ligne n'existe pas ");
+        }
+        String ecritFinal="";
+        Scanner lire = new Scanner(fichierbis);
+        FileWriter fw = new FileWriter(fichierbis);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        if( ligne == 1) {
+            for(int caractere = 0;caractere<75 && caractere < aEcrire.length();caractere++) {
+                ecritFinal += aEcrire.charAt(caractere);
+            }
+        }else {
+            for(int indice = 0 ; indice < ligne ; indice++) {
+                ecrire.write(lire.nextLine());
+                ecrire.newLine();
+            }
+            for(int caractere = 0;caractere<75;caractere++) {
+                ecritFinal += aEcrire.charAt(caractere);
+            }
+        }
+        lire.close();
+        ecrire.write(ecritFinal);
+        ecrire.close();
+
+    }
+
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param ligneDebut
+     * @param ligneFin
+     * @param emplacementCopie
+     * @throws IOException
+     */
+    public static void copie(int ligneDebut , int ligneFin, int emplacementCopie) throws IOException {
+        if(!ligneExiste(ligneDebut) || !ligneExiste(emplacementCopie)|| !ligneExiste(ligneFin)) {
+            throw new IllegalArgumentException("les ligne n'existe pas");
+        }
+        int ligne = 1;
+        ArrayList<String> sauvegarde = new ArrayList<String>();
+        Scanner lire = new Scanner(fichierbis);
+        FileWriter fw = new FileWriter(fichierbis);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        if(ligneFin<ligneDebut) {
+            ligneFin = ligneDebut;
+            ligneDebut = ligneFin;  
+        }
+        while(!lire.hasNextLine()) {
+            ecrire.write(lire.nextLine());
+            ecrire.newLine();
+            while(ligne>= ligneDebut && ligne<= ligneFin) {
+                sauvegarde.add(lire.next());
+            }
+
+            ligne++;
+        }
+        lire.useRadix(0);
+        ligne = 0;
+        while(!lire.hasNextLine()) {
+            if(ligne == emplacementCopie) {
+                for(int i=0;i<sauvegarde.size();i++) {
+                    ecrire.write(sauvegarde.get(i));
+                    ecrire.newLine();
+                }
+            }else {
+                ecrire.write(lire.nextLine());
+                ecrire.newLine();
+            }
+        }
+    }
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param ligne
+     * @param emplacementCopie
+     * @throws IOException
+     */
+    public static void copie(int ligne , int emplacementCopie) throws IOException {
+
+        if(!ligneExiste(ligne)|| !ligneExiste(emplacementCopie)) {
+            throw new IllegalArgumentException("impossible de copier vers une ligne qui n'existe pas");
+        }
+        int indice = 1;
+        String sauvegarde="";
+        Scanner lire = new Scanner(fichierbis);
+        FileWriter fw = new FileWriter(fichierbis);
+        BufferedWriter ecrire = new BufferedWriter(fw);
+        while(lire.hasNextLine()) {
+            ecrire.write(lire.nextLine());
+            ecrire.newLine();
+            if(indice == ligne) {
+                sauvegarde = lire.next();   
+            }
+            indice++;
+        }
+
+        indice = 1;
+        while(lire.hasNextLine()) {
+            if(indice == emplacementCopie) {
+                ecrire.write(sauvegarde);
+                ecrire.newLine();
+                lire.nextLine();
+            }else {
+
+
+                ecrire.write(lire.nextLine());
+                ecrire.newLine();
+            }
+        }
+        ecrire.close();
+        lire.close();
+    }
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param ligneADeplacer
+     * @param ligne
+     * @throws IOException
+     */
+    public static void deplacement(int ligneADeplacer , int ligne) throws IOException {
+        if(!ligneExiste(ligneADeplacer)|| ! ligneExiste(ligne)) {
+            throw new IllegalArgumentException("les ligne référencé n'existepas");
+        }
+        copie(ligneADeplacer,ligne);                                                                             
+        suppression1Ligne(ligneADeplacer);
+    }
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param ligneADeplacerA
+     * @param ligneADeplacerB
+     * @param ligne
+     * @throws IOException
+     */
+    public static void deplacement(int ligneADeplacerA,int ligneADeplacerB,int ligne) throws IOException {
+        copie(ligneADeplacerA, ligneADeplacerB, ligne);
+        suppressionPlusieurLigne(ligneADeplacerA, ligneADeplacerB);
+
+    }
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * 
+     */
+    public static void fermeture() {
+        fichierbis.delete();
+    }
+
+
+    /** TODO commenter le rôle de cette méthode (SRP)
+     * @param args
+     * @throws IOException
+     */
+    public static void main (String[]args) throws IOException {
+        aEcrire="lentug hdnl";
+        ecrireLigneApres(2);
+        //              copie(2, 1);
+        //      enregistrer(fichier);
+
+
+    }
 }
